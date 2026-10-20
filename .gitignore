@@ -1,0 +1,25 @@
+# Entorno y credenciales
+.env
+*.env
+!.env.example
+
+# Archivos de sistema operativo
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Logs y volcados
+*.log
+api/avisos.log
+error_log
+npm-debug.log*
+
+# Configuraciones de editor / IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Archivos Markdown temporales (conservar solo README.md)
+*.md
+!README.md

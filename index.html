@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoTrack — Plataforma de Monitoreo Ambiental</title>
+  <meta name="description" content="EcoTrack es una plataforma fullstack para el registro y monitoreo de mediciones ambientales en tiempo real.">
+  
+  <!-- Tipografía moderna Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Estilos de Leaflet (OpenStreetMap) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+  <!-- Estilos del proyecto -->
+  <link rel="stylesheet" href="css/styles.css?v=3">
+</head>
+<body>
+
+  <!-- Encabezado Principal -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v8"></path>
+            <path d="m4.93 10.93 1.41 1.41"></path>
+            <path d="M2 18h2"></path>
+            <path d="M20 18h2"></path>
+            <path d="m19.07 10.93-1.41 1.41"></path>
+            <path d="M22 22H2"></path>
+            <path d="m16 6-4 4-4-4"></path>
+            <path d="M16 18a4 4 0 0 0-8 0"></path>
+          </svg>
+        </div>
+        <div>
+          <h1>EcoTrack</h1>
+          <p class="brand-tagline">Monitoreo y Gestión Ambiental</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span id="badge-estado" class="badge badge-online">
+          <span class="badge-dot"></span> API En Línea
+        </span>
+        <a href="api/mediciones.php" target="_blank" class="btn btn-outline btn-sm">Ver API JSON</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal -->
+  <main class="main-container">
+
+    <!-- Mensaje de notificación global / feedback al usuario -->
+    <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+    <!-- Panel Meteorológico -->
+    <section class="weather-panel card" aria-labelledby="weather-title">
+      <div class="weather-header">
+        <div>
+          <span class="section-kicker">Meteorología en Vivo</span>
+          <h2 id="weather-title">Clima de Referencia en Tiempo Real</h2>
+          <p class="text-muted" id="clima-ubicacion-nombre">Estación de Referencia: Tres Arroyos, Buenos Aires</p>
+        </div>
+        <button id="btn-actualizar-clima" class="btn btn-secondary btn-sm" title="Refrescar clima actual">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          Actualizar Clima
+        </button>
+      </div>
+
+      <div id="banner-degradacion" class="alert alert-warning d-none" role="status">
+        <strong>Modo Degradado Activo:</strong> El servicio meteorológico externo no responde temporalmente. El registro de mediciones continúa operando con normalidad.
+      </div>
+
+      <div class="weather-grid" id="clima-contenedor">
+        <div class="weather-card">
+          <div class="weather-icon-temp">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg>
+          </div>
+          <div>
+            <span class="weather-label">Temperatura Ambiente</span>
+            <div class="weather-value" id="clima-temp">-- °C</div>
+          </div>
+        </div>
+
+        <div class="weather-card">
+          <div class="weather-icon-hum">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          </div>
+          <div>
+            <span class="weather-label">Humedad Relativa</span>
+            <div class="weather-value" id="clima-hum">-- %</div>
+          </div>
+        </div>
+
+        <div class="weather-card">
+          <div class="weather-icon-wind">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>
+          </div>
+          <div>
+            <span class="weather-label">Viento Estimado</span>
+            <div class="weather-value" id="clima-viento">-- km/h</div>
+          </div>
+        </div>
+
+        <div class="weather-card">
+          <div class="weather-icon-clock">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <span class="weather-label">Última Sincronización</span>
+            <div class="weather-subvalue" id="clima-hora">Consultando servicio...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Disposición en 2 Columnas para Desktop -->
+    <div class="dashboard-grid">
+
+      <!-- Columna Izquierda: Formulario CRUD y Mapa -->
+      <div class="grid-column">
+        
+        <!-- Tarjeta de Formulario: Crear y Editar -->
+        <section class="card" aria-labelledby="form-title">
+          <div class="card-header">
+            <div>
+              <span class="section-kicker">Gestión de Registros</span>
+              <h2 id="form-title">Registrar Medición Ambiental</h2>
+            </div>
+            <span id="badge-modo-form" class="badge badge-success">Nuevo Registro</span>
+          </div>
+
+          <!-- Contenedor de error o feedback del formulario -->
+          <div id="alerta-form" class="alert d-none" role="alert"></div>
+
+          <form id="formulario-medicion" novalidate>
+            <input type="hidden" id="campo-id" name="id" value="">
+
+            <div class="form-group">
+              <label for="campo-ubicacion">Ubicación o Estación de Monitoreo <span class="required">*</span></label>
+              <input type="text" id="campo-ubicacion" name="ubicacion" class="form-control" placeholder="Ej: Tres Arroyos - Parque Cabañas" required maxlength="100">
+              <span class="form-hint">Nombre de la ciudad, barrio o estación de monitoreo.</span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group form-col">
+                <label for="campo-temperatura">Temperatura (°C) <span class="required">*</span></label>
+                <input type="number" id="campo-temperatura" name="temperatura" class="form-control" placeholder="Ej: 19.5" step="0.1" min="-60" max="70" required>
+              </div>
+
+              <div class="form-group form-col">
+                <label for="campo-humedad">Humedad (%) <span class="required">*</span></label>
+                <input type="number" id="campo-humedad" name="humedad" class="form-control" placeholder="Ej: 55.0" step="0.1" min="0" max="100" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group form-col">
+                <label for="campo-fecha">Fecha y Hora de Medición</label>
+                <input type="datetime-local" id="campo-fecha" name="fecha" class="form-control">
+              </div>
+
+              <div class="form-group form-col">
+                <label for="campo-observaciones">Observaciones</label>
+                <input type="text" id="campo-observaciones" name="observaciones" class="form-control" placeholder="Ej: Cielo despejado, viento leve" maxlength="255">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group form-col">
+                <label for="campo-latitud">Latitud (Opcional)</label>
+                <input type="number" id="campo-latitud" name="latitud" class="form-control" placeholder="Ej: -38.3739" step="any">
+              </div>
+              <div class="form-group form-col">
+                <label for="campo-longitud">Longitud (Opcional)</label>
+                <input type="number" id="campo-longitud" name="longitud" class="form-control" placeholder="Ej: -60.2798" step="any">
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" id="btn-guardar" class="btn btn-primary">
+                <span id="btn-guardar-texto">Guardar Medición</span>
+              </button>
+              <button type="button" id="btn-cancelar" class="btn btn-secondary d-none">
+                Cancelar Edición
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Tarjeta de Mapa Interactivo -->
+        <section class="card" aria-labelledby="map-title">
+          <div class="card-header">
+            <div>
+              <span class="section-kicker">Mapa Interactivo</span>
+              <h2 id="map-title">Geolocalización de Estaciones</h2>
+            </div>
+            <span class="text-muted text-sm">OpenStreetMap & Leaflet</span>
+          </div>
+          <p class="map-helper">Hacé clic en el mapa para autocompletar las coordenadas de latitud y longitud en el formulario.</p>
+          <div id="mapa-contenedor" class="mapa-leaflet" style="height: 280px;"></div>
+        </section>
+
+      </div>
+
+      <!-- Columna Derecha: Gráfico de Tendencias y Tabla de Mediciones -->
+      <div class="grid-column">
+
+        <!-- Gráfico Básico de Tendencias Ambientales -->
+        <section class="card" aria-labelledby="chart-title">
+          <div class="card-header">
+            <div>
+              <span class="section-kicker">Visualización</span>
+              <h2 id="chart-title">Histórico de Temperatura y Humedad</h2>
+            </div>
+          </div>
+          <div class="chart-container" style="position: relative; height: 200px;">
+            <canvas id="grafico-mediciones"></canvas>
+          </div>
+        </section>
+
+        <!-- Tabla CRUD de Mediciones -->
+        <section class="card" aria-labelledby="table-title">
+          <div class="card-header table-card-header">
+            <div>
+              <span class="section-kicker">Base de Datos de Estaciones</span>
+              <h2 id="table-title">Registro de Mediciones</h2>
+            </div>
+            <div class="table-search-box">
+              <input type="search" id="input-buscar" class="form-control form-control-sm" placeholder="Filtrar por ubicación...">
+              <button id="btn-recargar" class="btn btn-secondary btn-sm" title="Recargar lista">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-info-bar">
+            <span id="contador-mediciones" class="text-sm text-muted">Cargando registros...</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table-mediciones" id="tabla-mediciones">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Ubicación</th>
+                  <th>Temp.</th>
+                  <th>Humedad</th>
+                  <th>Fecha</th>
+                  <th>Observaciones</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="cuerpo-tabla">
+                <tr>
+                  <td colspan="7" class="text-center py-4 text-muted">Cargando mediciones desde la API...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Pie de página informativo -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p><strong>EcoTrack</strong> · Plataforma de Monitoreo y Seguimiento Ambiental</p>
+      <p class="text-muted text-sm">
+        Datos meteorológicos sincronizados en tiempo real con Open-Meteo y cartografía de OpenStreetMap.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts: Chart.js y Leaflet CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Lógica Principal del Frontend -->
+  <script src="js/app.js?v=3"></script>
+</body>
+</html>
