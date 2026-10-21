@@ -11,8 +11,8 @@ Aplicación fullstack desplegada en la nube para el registro, consulta y anális
 - **Tema:** Seguimiento y monitoreo ambiental (temperatura, humedad relativa y geolocalización de estaciones).
 - **Integrantes:** *(Completar con Apellido y Nombre del estudiante o grupo)*
 - **Docentes:** Eduardo Mónaco · Heber Alonso
-- **URL Pública de la App (Frontend):** `https://ecotrack-production.up.railway.app` *(o la URL asignada en tu despliegue de Railway)*
-- **URL Pública de la API (Backend):** `https://ecotrack-production.up.railway.app/api/mediciones.php`
+- **URL Pública de la App (Frontend):** `https://ecotrack-production-28e7.up.railway.app/`
+- **URL Pública de la API (Backend):** `https://ecotrack-production-28e7.up.railway.app/api/mediciones.php`
 
 ---
 
@@ -124,7 +124,7 @@ El proyecto incorpora tres integraciones externas justificadas según los requis
 ## 6. Despliegue en la Nube
 
 ### Proveedor elegido y modelo Cloud
-- **Proveedor:** **Railway** (`https://ecotrack-production.up.railway.app`).
+- **Proveedor:** **Railway** (`https://ecotrack-production-28e7.up.railway.app/`).
 - **Modelo de Servicio:** **PaaS** (Platform as a Service).
 - **Justificación de la elección:**
   1. **Contenedor PHP + Base de Datos en el mismo proyecto:** Railway permite desplegar la aplicación mediante un `Dockerfile` estándar (`php:8.2-apache` con extensión `pdo_mysql`) junto con una base de datos MySQL gestionada en la misma red privada de baja latencia.
