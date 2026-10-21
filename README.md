@@ -1,18 +1,30 @@
-# EcoTrack — Sistema de Seguimiento Ambiental
+# 🌍 EcoTrack — Sistema de Seguimiento Ambiental
+
+[![Despliegue en Railway](https://img.shields.io/badge/Railway-Despliegue%20Activo-00C7B7?style=for-the-badge&logo=railway&logoColor=white)](https://ecotrack-production-28e7.up.railway.app/)
+[![PHP](https://img.shields.io/badge/PHP-8.2%20Apache-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net/)
+[![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com/)
+
+> 🚀 **Aplicación en Producción:** Podés acceder directamente a la plataforma desplegada en la nube haciendo clic aquí:  
+> 👉 **[https://ecotrack-production-28e7.up.railway.app/](https://ecotrack-production-28e7.up.railway.app/)**
 
 Aplicación fullstack desplegada en la nube para el registro, consulta y análisis de mediciones ambientales en tiempo real.  
-**Trabajo Práctico Integrador N.º 1** · *Aplicaciones Móviles y Cloud Computing* · Universidad Provincial del Sudoeste (UPSO).
+**Trabajo Práctico Integrador N.º 1** · *Aplicaciones Móviles y Cloud Computing* · **Universidad Provincial del Sudoeste (UPSO)**.
 
 ---
 
-## 1. Presentación
+## 1. Presentación y Equipo de Desarrollo
 
 - **Nombre de la Aplicación:** EcoTrack
-- **Tema:** Seguimiento y monitoreo ambiental (temperatura, humedad relativa y geolocalización de estaciones).
-- **Integrantes:** *(Completar con Apellido y Nombre del estudiante o grupo)*
+- **Tema:** Seguimiento y monitoreo ambiental (temperatura, humedad relativa y geolocalización de estaciones meteorológicas).
+- **Equipo de Desarrollo:** **EcoTech Dev Team**
+- **Integrantes (Estudiantes UPSO):**
+  - **Mateo Lopez Muñoz**
+  - **Santiago Saldias**
+  - **Matias Puhl**
+  - **Walter Solano**
 - **Docentes:** Eduardo Mónaco · Heber Alonso
-- **URL Pública de la App (Frontend):** `https://ecotrack-production-28e7.up.railway.app/`
-- **URL Pública de la API (Backend):** `https://ecotrack-production-28e7.up.railway.app/api/mediciones.php`
+- **Institución:** Universidad Provincial del Sudoeste (UPSO)
+- **URL Pública Oficial:** [https://ecotrack-production-28e7.up.railway.app/](https://ecotrack-production-28e7.up.railway.app/)
 
 ---
 
@@ -178,12 +190,11 @@ El proyecto incorpora tres integraciones externas justificadas según los requis
 
 ## 9. Aportes y Registro de Trabajo (R10)
 
-Tabla de registro de aportes y responsabilidades individuales/grupales según el requisito **R10** de la consigna:
+Tabla de registro de aportes y responsabilidades individuales del equipo estudiantil según el requisito **R10** de la consigna:
 
-| Integrante | Tareas / Componentes Realizados | Archivos Desarrollados / Modificados | Fechas |
-| :--- | :--- | :--- | :--- |
-| *(Completar con Nombre y Apellido)* | **Configuración y Seguridad:** Separación de conexión PDO, entorno `local`/`produccion`, CORS y `.gitignore`. | `api/config.php`, `api/conexion.php`, `.gitignore`, `.env.example` | Octubre 2026 |
-| *(Completar con Nombre y Apellido)* | **Servicios Externos y Degradación:** Cliente cURL nativo, API Open-Meteo (clima y geocodificación), notificaciones Resend/simulación. | `api/servicios.php` | Octubre 2026 |
-| *(Completar con Nombre y Apellido)* | **Controlador RESTful:** CRUD completo, validación de coordenadas automáticas, códigos HTTP semánticos (200, 201, 400, 404, 422, 500). | `api/mediciones.php` | Octubre 2026 |
-| *(Completar con Nombre y Apellido)* | **Frontend Interactivo:** Interfaz responsiva, consumo asíncrono con Fetch API, sincronización con Leaflet, Chart.js y toasts de degradación. | `index.html`, `js/app.js`, `css/styles.css` | Octubre 2026 |
-| *(Completar con Nombre y Apellido)* | **Despliegue y Documentación:** Dockerfile para Railway (PaaS), base de datos MySQL e informe técnico integral. | `Dockerfile`, `sql/mediciones.sql`, `README.md` | Octubre 2026 |
+| Integrante | Rol / Responsabilidad | Componentes Desarrollados | Archivos Desarrollados / Modificados | Fechas |
+| :--- | :--- | :--- | :--- | :--- |
+| **Mateo Lopez Muñoz** | **DevOps & Arquitectura Cloud** | Configuración de entorno, Dockerfile optimizado para Railway (Apache + PHP 8.2), despliegue PaaS y coordinación del proyecto. | `Dockerfile`, `api/config.php`, `.env.example`, `.gitignore`, `README.md` | Octubre 2026 |
+| **Santiago Saldias** | **Backend & Base de Datos** | Modelado DDL relacional en MySQL, conexión PDO parametrizada y controlador RESTful (CRUD completo de mediciones con códigos HTTP). | `api/mediciones.php`, `api/conexion.php`, `sql/mediciones.sql`, `sql/railway_setup.sql` | Octubre 2026 |
+| **Matias Puhl** | **Servicios Externos & Degradación** | Integración cURL con Open-Meteo (pronóstico climático y geocodificación automática) y manejo de degradación elegante ante caídas de servicio. | `api/servicios.php`, `api/mediciones.php` | Octubre 2026 |
+| **Walter Solano** | **Frontend & Visualización de Datos** | Interfaz de usuario responsiva, consumo asíncrono Fetch API, mapa interactivo Leaflet con OpenStreetMap y gráfico Chart.js. | `index.html`, `js/app.js`, `css/styles.css` | Octubre 2026 |
