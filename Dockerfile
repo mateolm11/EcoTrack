@@ -8,11 +8,10 @@ RUN a2dismod mpm_event mpm_worker || true \
     && a2enmod mpm_prefork \
     && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Apache escucha en el puerto que indique el proveedor (variable PORT); por defecto 80
-ENV PORT=80
-RUN sed -i 's/80/${PORT}/g' /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
-
 COPY . /var/www/html/
 
 # Permisos de escritura en api/ para avisos.log
 RUN chown -R www-data:www-data /var/www/html/api
+
+# Configurar el puerto dinámico de Railway al iniciar el contenedor y lanzar Apache
+CMD sh -c "sed -i \"s/Listen 80/Listen \${PORT:-80}/g\" /etc/apache2/ports.conf && sed -i \"s/:80/:\${PORT:-80}/g\" /etc/apache2/sites-available/*.conf && apache2-foreground"
