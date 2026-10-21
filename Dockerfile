@@ -3,8 +3,8 @@ FROM php:8.2-apache
 # Extensión PDO para MySQL
 RUN docker-php-ext-install pdo_mysql
 
-# Asegurar un único MPM activo en Apache y definir ServerName
-RUN a2dismod mpm_event mpm_worker || true \
+# Solucionar definitivamente el error 'More than one MPM loaded' y advertencia ServerName
+RUN rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf \
     && a2enmod mpm_prefork \
     && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
